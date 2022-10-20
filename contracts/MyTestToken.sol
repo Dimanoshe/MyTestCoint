@@ -7,11 +7,16 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 
-contract ExampleToken is ERC20, Ownable{
+contract MyTestToken is ERC20, Ownable{
    using SafeMath for uint256;
  
-   constructor(uint256 initialSupply)ERC20("My Test Coint", "MTC") {
-      _mint(msg.sender, initialSupply);
+   constructor() ERC20("My Test Coint", "MTC") {
+   }
+
+   function mint(address account, uint256 amount) public virtual {
+      require(amount > 0);
+      _mint(account, amount);
+        
    }
 
    function burn(uint256 amount) public returns (bool) {
