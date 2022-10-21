@@ -1,11 +1,11 @@
 async function main () {
   // We get the contract to deploy
   // For Start Deploy: npx hardhat run --network goerli scripts/deploy.js
-  const MyTestToken = await ethers.getContractFactory('MyTestToken');
-  console.log('Deploying MyTestToken...');
-  const extoken = await MyTestToken.deploy();
+  const MyTestCoin = await ethers.getContractFactory('MyTestCoin');
+  console.log('Deploying MyTestCoin...');
+  const extoken = await MyTestCoin.deploy();
   await extoken.deployed();
-  console.log('MyTestToken deployed to:', extoken.address);
+  console.log('MyTestCoin deployed to:', extoken.address);
 }
 
 main()
