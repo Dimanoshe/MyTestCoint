@@ -50,7 +50,8 @@ function App() {
   }
   const stake= async () => {
     try {
-      const stakes = await contract.deposit('10000000000000000000');
+      let stakeSum = document.querySelector('[name="stake-field"]').value;
+      const stakes = await contract.deposit(stakeSum);
       console.log("Stakes: ", parseInt(stakes));
     } catch (error) {
       console.log("getStake Error: ", error);
@@ -66,7 +67,8 @@ function App() {
   }
   const withdraw= async () => {
     try {
-      const withdraw = await contract.withdraw('10000000000000000000');
+      let withdrawSum = document.querySelector('[name="withdraw-field"]').value;
+      const withdraw = await contract.withdraw(withdrawSum);
       console.log("withdraw: ", parseInt(withdraw));
     } catch (error) {
       console.log("getWithdrawAll Error: ", error);
@@ -100,7 +102,7 @@ function App() {
 
         <div className="col">
           <h3>Stakes</h3>
-
+        <div>
           <button type="submit" className="btn btn-dark" 
           onClick={
             () => {
@@ -110,14 +112,15 @@ function App() {
               getRewardsPerHour();
             }
           }>Update</button>
-
-          <button type="submit" className="btn btn-dark" onClick={stake}>Stake 10*10^18</button>
           <button type="submit" className="btn btn-dark" onClick={withdrawAll}>Withdraw All</button>
-          <button type="submit" className="btn btn-dark" onClick={withdraw}>Withdraw 10*10^18</button>
           <button type="submit" className="btn btn-dark" onClick={stakeRewards}>Stake Rewards</button>
-
-          
-          
+        </div>
+        <div>
+          <input type="number" name="stake-field"/>
+          <button type="submit" className="btn btn-dark" onClick={stake}>Stake</button>
+          <input type="number" name="withdraw-field"/>
+          <button type="submit" className="btn btn-dark" onClick={withdraw}>Withdraw</button>
+        </div>
         </div>
         
       </div>
