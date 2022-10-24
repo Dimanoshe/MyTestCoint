@@ -14,8 +14,8 @@ function App() {
 
   const getbalanceOfSigner = async () => {
     try {
-      const balanceOfSigner = await contract.balanceOf(signer.getAddress());
-      console.log("Total Stakes: ", parseInt(balanceOfSigner));
+      const balanceOfSigner = (parseInt(await contract.balanceOf(signer.getAddress())) / 10**18).toFixed(4);
+      console.log("Balance of signer: ", balanceOfSigner);
       document.querySelector('#balanceOfSigner').innerHTML=balanceOfSigner
     } catch (error) {
       console.log("getbalanceOfSigner Error: ", error);
@@ -23,17 +23,20 @@ function App() {
   }
   const getDepositInfo= async () => {
     try {
-      const depositInfo = await contract.getDepositInfo(signer.getAddress());
-      console.log("Total Stakes: ", parseInt(depositInfo));
-      document.querySelector('#depositOfSigner').innerHTML=depositInfo
+      const depositInfo = (await contract.getDepositInfo(signer.getAddress()))["_stake"] / 10**18;
+      const rewardInfo = (await contract.getDepositInfo(signer.getAddress()))["_rewards"] / 10**18;
+      console.log("Deposit info: ", depositInfo);
+      console.log("Reward info: ", rewardInfo);
+      document.querySelector('#depositOfSigner').innerHTML=depositInfo;
+      document.querySelector('#rewardOfSigner').innerHTML=rewardInfo;
     } catch (error) {
       console.log("getDepositInfo Error: ", error);
     }
   }
   const getMinStake= async () => {
     try {
-      const minStake = await contract.minStake();
-      console.log("Total Stakes: ", parseInt(minStake));
+      const minStake = (await contract.minStake() / 10**18).toFixed(4);
+      console.log("Min stake: ", parseInt(minStake));
       document.querySelector('#minStake').innerHTML=minStake
     } catch (error) {
       console.log("getMinStake Error: ", error);
@@ -41,8 +44,8 @@ function App() {
   }
   const getRewardsPerHour= async () => {
     try {
-      const rewardsPerHour = await contract.rewardsPerHour();
-      console.log("Total Stakes: ", parseInt(rewardsPerHour));
+      const rewardsPerHour = (await contract.rewardsPerHour() / 10**5).toFixed(1);
+      console.log("Rewards per hour: ", parseInt(rewardsPerHour));
       document.querySelector('#rewardsPerHour').innerHTML=rewardsPerHour
     } catch (error) {
       console.log("getRewardsPerHour Error: ", error);
@@ -50,9 +53,9 @@ function App() {
   }
   const stake= async () => {
     try {
-      let stakeSum = document.querySelector('[name="stake-field"]').value;
-      const stakes = await contract.deposit(stakeSum);
-      console.log("Stakes: ", parseInt(stakes));
+      let stakeSum = (document.querySelector('[name="stake-field"]').value);
+      await contract.deposit((stakeSum * 10**18).toString());
+      console.log("Stakes: ", parseInt(stakeSum));
     } catch (error) {
       console.log("getStake Error: ", error);
     }
@@ -67,8 +70,8 @@ function App() {
   }
   const withdraw= async () => {
     try {
-      let withdrawSum = document.querySelector('[name="withdraw-field"]').value;
-      const withdraw = await contract.withdraw(withdrawSum);
+      let withdrawSum = (document.querySelector('[name="withdraw-field"]').value);
+      const withdraw = await contract.withdraw((withdrawSum * 10**18).toString());
       console.log("withdraw: ", parseInt(withdraw));
     } catch (error) {
       console.log("getWithdrawAll Error: ", error);
@@ -82,8 +85,14 @@ function App() {
       console.log("stakeRewards Error: ", error);
     }
   }
-
-
+  const getRewards= async () => {
+    try {
+      const getRewards = await contract.claimRewards();
+      console.log("getRewards: ", getRewards);
+    } catch (error) {
+      console.log("getRewards Error: ", error);
+    }
+  }
 
   return (
     <div className="container">
@@ -94,10 +103,13 @@ function App() {
           <p id="balanceOfSigner"></p>
           <h3>Your Deposit</h3>
           <p id="depositOfSigner"></p>
+          <h3>Your Rewards</h3>
+          <p id="rewardOfSigner"></p>
           <h3>Min stake</h3>
           <p id="minStake"></p>
-          <h3>Rewards Per Hour</h3>
+          <h3>Rewards Per Hour (%)</h3>
           <p id="rewardsPerHour"></p>
+          
         </div>
 
         <div className="col">
@@ -114,6 +126,8 @@ function App() {
           }>Update</button>
           <button type="submit" className="btn btn-dark" onClick={withdrawAll}>Withdraw All</button>
           <button type="submit" className="btn btn-dark" onClick={stakeRewards}>Stake Rewards</button>
+          <button type="submit" className="btn btn-dark" onClick={getRewards}>Get Rewards</button>
+
         </div>
         <div>
           <input type="number" name="stake-field"/>
