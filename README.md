@@ -19,6 +19,18 @@ npm install --save-dev hardhat
 npx hardhat node
 ```
 
+#### Secrets
+
+Put in the root of your project secrets.json
+
+```json
+{
+     "alchemyApiKey": "<Your Infura Key>",
+      "mnemonic": "<Your mnemonic phrase>"
+}
+```
+Default Hardhat mnemonic phrase "test test test test test test test test test test test junk"
+
 #### Start Deploy script
 
 ```bash
